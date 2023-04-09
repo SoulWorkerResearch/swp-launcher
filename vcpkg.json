@@ -1,0 +1,5 @@
+{
+  "name": "swp-launcher",
+  "version": "1.0.0",
+  "dependencies": [ "spdlog", "detours" ]
+}
