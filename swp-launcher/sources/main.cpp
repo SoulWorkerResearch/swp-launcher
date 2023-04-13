@@ -24,8 +24,7 @@ auto get_cmdline(INT argc, TCHAR* argv[]) -> decltype(auto)
 
 INT _tmain(INT argc, TCHAR* argv[])
 {
-	STARTUPINFOW si{};
-	si.cb = sizeof(si);
+	STARTUPINFOW si{ .cb {sizeof(si)} };
 
 	PROCESS_INFORMATION pi{};
 
