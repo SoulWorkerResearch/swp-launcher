@@ -16,10 +16,10 @@ jobs:
       matrix: 
         include:
           - BUILD_CONFIGURATION: Debug
-            PATHS: bin/*.exe, bin/*.pdb
+            PATHS: bin/**/*.exe, bin/**/*.pdb
 
           - BUILD_CONFIGURATION: Release
-            PATHS: bin/*.exe
+            PATHS: bin/**/*.exe
 
     name: Build a ${{ matrix.BUILD_CONFIGURATION }} version
     steps: 
@@ -35,7 +35,7 @@ jobs:
       run: vcpkg integrate install
       
     - name: Cache VCPKG packages
-      uses: actions/cache@v3
+      uses: actions/cache@main
       with:
         key: vcpkg
         path: ${{ env.VCPKG_CACHE_DIR }}
@@ -44,12 +44,12 @@ jobs:
       run: msbuild /m /p:Configuration=${{ matrix.BUILD_CONFIGURATION }} /property:Platform=x86 /property:VcpkgInstalledDir=${{ env.VCPKG_CACHE_DIR }}
 
     - name: Pack to archive
-      run: Compress-Archive -Path ${{ matrix.PATHS }} -DestinationPath swp-loader-${{ github.ref_name }}-${{ matrix.BUILD_CONFIGURATION }}.zip
+      run: Compress-Archive -Path ${{ matrix.PATHS }} -DestinationPath swp-launcher-${{ github.ref_name }}-${{ matrix.BUILD_CONFIGURATION }}.zip
 
     - name: Publish build
       uses: softprops/action-gh-release@master
       with:
         name: SoulWorker Launcher ${{ github.ref_name }}
-        files: swp-loader-${{ github.ref_name }}-${{ matrix.BUILD_CONFIGURATION }}.zip
+        files: swp-launcher-${{ github.ref_name }}-${{ matrix.BUILD_CONFIGURATION }}.zip
         generate_release_notes: true
         tag_name: ${{ github.ref_name }}
