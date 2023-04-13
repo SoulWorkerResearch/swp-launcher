@@ -9,6 +9,7 @@ This is an auxiliary application designed to inject the loader into the game. It
 ## How to
 
 - Unpack the latest available archive from the [release](../../releases) page into your game folder. Replace the files if necessary
+
 - Now you can run the game using steam
 
 ## [Well cum 👌 to discord](http://discord.gg/SequFJP)
