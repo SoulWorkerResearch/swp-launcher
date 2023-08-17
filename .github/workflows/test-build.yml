@@ -1,41 +1,54 @@
-name: Test Build
+name: "Test build"
 
 on:
   push:
     branches-ignore:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 env:
-  VCPKG_CACHE_DIR: ~/.vcpkg/cache
+  # VCPKG_CACHE_DIR: "~/.vcpkg/cache"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VCPKG_FEATURE_FLAGS: "dependencygraph"
+
+permissions:
+  contents: "write"
 
 jobs:
   publish:
-    runs-on: windows-latest
+    runs-on: "windows-latest"
     strategy:
       fail-fast: true
-      matrix: 
-        include:
-          - BUILD_CONFIGURATION: Debug
-          - BUILD_CONFIGURATION: Release
-            
-    name: ${{ matrix.BUILD_CONFIGURATION }}
-    steps:          
-    - name: Checkout
-      uses: actions/checkout@main
-      with:
-        submodules: true
+      matrix:
+        build-config: ["Debug", "Release"]
+        arch: ["x64", "x86"]
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@main
+    name: "Build a ${{ matrix.build-config }} (${{ matrix.arch }}) version"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@main"
+        with:
+          submodules: true
 
-    - name: Integrate vcpkg
-      run: vcpkg integrate install
-      
-    - name: Cache VCPKG packages
-      uses: actions/cache@main
-      with:
-        key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
-        path: ${{ env.VCPKG_CACHE_DIR }}
+      - name: "Add MSBuild to PATH"
+        uses: "microsoft/setup-msbuild@main"
+        with:
+          vs-prerelease: true
 
-    - name: Build solution
-      run: msbuild /m /p:Configuration=${{ matrix.BUILD_CONFIGURATION }} /property:Platform=x86 /property:VcpkgInstalledDir=${{ env.VCPKG_CACHE_DIR }}
+      - name: "Cache VCPKG packages"
+        uses: "actions/cache@v2"
+        id: "vcpkg-cache"
+        with:
+          key: "${{ runner.os }}-${{ matrix.arch }}-${{ matrix.build-config }}-vcpkg-${{ hashFiles('vcpkg.json') }}"
+          # path: "${{ env.VCPKG_CACHE_DIR }}"
+          path: |
+            ./swp-sdk/vcpkg_installed/
+            ./vcpkg_installed/
+            C:/vcpkg/packages/
+            C:/vcpkg/downloads/
+            C:/vcpkg/buildtrees/
+
+      - name: "Integrate vcpkg"
+        run: "vcpkg integrate install"
+
+      - name: "Build solution"
+        run: "msbuild /m /p:Configuration=${{ matrix.build-config }} /property:Platform=${{ matrix.arch }}"

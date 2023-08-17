@@ -1,55 +1,72 @@
-name: Deploy
+name: "Deploy"
 
 on:
   push:
     branches:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 env:
-  VCPKG_CACHE_DIR: ~/.vcpkg/cache
+  # VCPKG_CACHE_DIR: "${{ github.workspace }}\\vcpkg\\cache"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VCPKG_FEATURE_FLAGS: "dependencygraph"
+
+permissions:
+  contents: "write"
 
 jobs:
   publish:
-    runs-on: windows-latest
+    runs-on: "windows-latest"
     strategy:
       fail-fast: true
-      matrix: 
-        include:
-          - BUILD_CONFIGURATION: Debug
-            PATHS: bin/**/*.exe, bin/**/*.pdb
+      matrix:
+        build-config: ["Debug", "Release"]
+        arch: ["x64", "x86"]
+        path: ["bin/**/*.dll, bin/**/*.pdb", "bin/**/*.dll"]
 
-          - BUILD_CONFIGURATION: Release
-            PATHS: bin/**/*.exe
+    env:
+      archive-path: ${{ github.event.repository.name }}-${{ github.ref_name }}-${{ matrix.build-config }}-${{ matrix.arch }}${{ contains(matrix.path, '.pdb') && '-WithDebugSymbols' || '' }}.zip
 
-    name: Build a ${{ matrix.BUILD_CONFIGURATION }} version
-    steps: 
-    - name: Checkout
-      uses: actions/checkout@main
-      with: 
-        submodules: true
+    name: "Build a ${{ matrix.build-config }} (${{ matrix.arch }} | ${{ matrix.path }}) version"
+    steps:
+      - name: "Print Archive name"
+        run: "echo ${{ env.archive-path }}"
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@main
+      - name: "Checkout"
+        uses: "actions/checkout@main"
+        with:
+          submodules: true
 
-    - name: Integrate vcpkg
-      run: vcpkg integrate install
-      
-    - name: Cache VCPKG packages
-      uses: actions/cache@main
-      with:
-        key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
-        path: ${{ env.VCPKG_CACHE_DIR }}
+      - name: "Add MSBuild to PATH"
+        uses: "microsoft/setup-msbuild@main"
 
-    - name: Build solution
-      run: msbuild /m /p:Configuration=${{ matrix.BUILD_CONFIGURATION }} /property:Platform=x86 /property:VcpkgInstalledDir=${{ env.VCPKG_CACHE_DIR }}
+      - name: "Cache VCPKG packages"
+        uses: "actions/cache@main"
+        with:
+          key: "${{ runner.os }}-${{ matrix.arch }}-${{ matrix.build-config }}-vcpkg-${{ hashFiles('vcpkg.json') }}"
+          # path: "${{ env.VCPKG_CACHE_DIR }}"
+          path: |
+            ./swp-sdk/vcpkg_installed/
+            ./vcpkg_installed/
+            C:/vcpkg/packages/
+            C:/vcpkg/downloads/
+            C:/vcpkg/buildtrees/
 
-    - name: Pack to archive
-      run: Compress-Archive -Path ${{ matrix.PATHS }} -DestinationPath swp-launcher-${{ github.ref_name }}-${{ matrix.BUILD_CONFIGURATION }}.zip
+      - name: "Integrate vcpkg"
+        run: "vcpkg integrate install"
 
-    - name: Publish build
-      uses: softprops/action-gh-release@master
-      with:
-        name: SoulWorker Launcher ${{ github.ref_name }}
-        files: swp-launcher-${{ github.ref_name }}-${{ matrix.BUILD_CONFIGURATION }}.zip
-        generate_release_notes: true
-        tag_name: ${{ github.ref_name }}
+      - name: "Build solution"
+        run: "msbuild /m /p:Configuration=${{ matrix.build-config }} /property:Platform=${{ matrix.arch }}"
+
+      - name: "Pack to archive"
+        run: "Compress-Archive -Path ${{ matrix.path }} -DestinationPath ${{ env.archive-path }}"
+
+      - name: "Files in workplace"
+        run: "ls ${{ github.workspace }}"
+
+      - name: "Publish build"
+        uses: "softprops/action-gh-release@master"
+        with:
+          name: "SoulWorker Launcher ${{ github.ref_name }}"
+          files: ${{ env.archive-path }}
+          generate_release_notes: true
+          tag_name: "${{ github.ref_name }}"
