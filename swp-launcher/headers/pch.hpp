@@ -19,5 +19,6 @@
 #include <ranges>
 #include <span>
 #include <string>
+#include <type_traits>
 
 #endif //PCH_H

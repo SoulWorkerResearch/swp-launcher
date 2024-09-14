@@ -9,6 +9,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{7241ac83-256f-4638-ac13-26eee8197f6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\headers\framework.hpp">
@@ -20,12 +23,27 @@
     <ClInclude Include="..\..\headers\targetver.hpp">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\headers\dll_directory.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\headers\get_cmdline.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\headers\handle_scope.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\main.cpp">
+    <ClCompile Include="..\..\sources\pch.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sources\pch.cpp">
+    <ClCompile Include="..\..\sources\dll_directory.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\get_cmdline.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\main.cpp">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>

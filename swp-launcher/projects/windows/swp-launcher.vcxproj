@@ -24,6 +24,11 @@
     <ClInclude Include="..\..\headers\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\headers\dll_directory.hpp" />
+    <ClInclude Include="..\..\headers\get_cmdline.hpp" />
+    <ClInclude Include="..\..\headers\handle_scope.hpp" />
+    <ClCompile Include="..\..\sources\dll_directory.cpp" />
+    <ClCompile Include="..\..\sources\get_cmdline.cpp" />
     <ClCompile Include="..\..\sources\main.cpp" />
     <ClCompile Include="..\..\sources\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -108,22 +113,6 @@
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgUseMD>true</VcpkgUseMD>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgUseMD>true</VcpkgUseMD>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgUseMD>true</VcpkgUseMD>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgUseMD>true</VcpkgUseMD>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -133,11 +122,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
       <ForcedIncludeFiles>%(PrecompiledHeaderFile)</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\headers\</AdditionalIncludeDirectories>
-      <EnableModules>false</EnableModules>
-      <BuildStlModules>false</BuildStlModules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -156,11 +142,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
       <ForcedIncludeFiles>%(PrecompiledHeaderFile)</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\headers\</AdditionalIncludeDirectories>
-      <EnableModules>false</EnableModules>
-      <BuildStlModules>false</BuildStlModules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -179,11 +162,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
       <ForcedIncludeFiles>%(PrecompiledHeaderFile)</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\headers\</AdditionalIncludeDirectories>
-      <EnableModules>false</EnableModules>
-      <BuildStlModules>false</BuildStlModules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -202,11 +182,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
       <ForcedIncludeFiles>%(PrecompiledHeaderFile)</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\headers\</AdditionalIncludeDirectories>
-      <EnableModules>false</EnableModules>
-      <BuildStlModules>false</BuildStlModules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
